@@ -2,10 +2,9 @@ pipeline {
     agent any
     environment {
         PROJECT_ID = 'carbon-facet-360216'
+        CLUSTER_NAME = 'cluster-1'
         LOCATION = 'us-central1-c'
         CREDENTIALS_ID = 'gke'
-        CLUSTER_NAME_TEST = 'cluster-1'
-        
     }
     stages {
         stage("Checkout code") {
@@ -30,12 +29,11 @@ pipeline {
                 }
             }
         }
-        stage('Deploy to GKE test cluster') {
+        stage('Deploy to GKE') {
             steps{
                 sh "sed -i 's/hello:latest/hello:${env.BUILD_ID}/g' deployment.yaml"
-                step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME_TEST, location: env.LOCATION, manifestPattern: 'deployment.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
+                step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: 'deployment.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
             }
         }
-        
-    } 
+    }
 }
