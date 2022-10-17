@@ -1,11 +1,11 @@
 pipeline {
     agent any
     environment {
-        PROJECT_ID = 'PROJECT-ID'
-        LOCATION = 'CLUSTER-LOCATION'
+        PROJECT_ID = 'carbon-facet-360216'
+        LOCATION = 'us-central1-c'
         CREDENTIALS_ID = 'gke'
-        CLUSTER_NAME_TEST = 'CLUSTER-NAME-1'
-        CLUSTER_NAME_PROD = 'CLUSTER-NAME-2'
+        CLUSTER_NAME_TEST = 'cluster-1'
+        
     }
     stages {
         stage("Checkout code") {
@@ -36,11 +36,6 @@ pipeline {
                 step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME_TEST, location: env.LOCATION, manifestPattern: 'deployment.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
             }
         }
-        stage('Deploy to GKE production cluster') {
-            steps{
-                input message:"Proceed with final deployment?"
-                step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME_PROD, location: env.LOCATION, manifestPattern: 'deployment.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
-            }
-        }
-    }
+        
+    
 }
