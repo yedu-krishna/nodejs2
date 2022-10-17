@@ -7,19 +7,23 @@ metadata:
 spec:
   strategy:
     type: Recreate
-template:
-  metadata:
-    labels:
+  selector:
+    matchLabels:
       app: hello
-      tier: hello
-  spec:
-    containers:
-    - name: hello
-      image: yedu269/hello:latest
-      imagePullPolicy: Always
-      ports:
-      - containerPort: 5000
-        name: hello
+
+  template:
+    metadata:
+      labels:
+        app: hello
+        tier: hello
+    spec:
+      containers:
+      - name: hello
+        image: yedu269/hello:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+          name: hello
 
 ---
 apiVersion: v1
@@ -32,7 +36,7 @@ spec:
   ports:
     - port: 5000
       targetPort: 5000
-selector:
-  app: hello
-  tier: hello
-type: LoadBalancer
+  selector:
+    app: hello
+    tier: hello
+  type: LoadBalancer
